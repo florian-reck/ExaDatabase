@@ -1,4 +1,0 @@
-websocket_client
-rsa
-EXASOL-DB-API
-pyodbc

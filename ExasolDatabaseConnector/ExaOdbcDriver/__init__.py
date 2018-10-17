@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-import ssl
+import pyodbc
 from ExasolDatabaseConnector.ExaDatabaseAbstract    import DatabaseAbstract
-from EXASOL                                         import connect, cursor
 
 class Database(DatabaseAbstract):
     """The Database class easifies the access to your DB instance
@@ -33,18 +32,24 @@ class Database(DatabaseAbstract):
 
     __conn = None
     __connectionTuple = None
+    __driver            = '/opt/exasol/EXASOL_ODBC-6.0.4/lib/linux/x86_64/libexaodbc-uo2214lv2.so'
+    __connectTimeOut    =  2
+    __queryTimeOut      = 30
+    __defaultSchema     = 'EXA_STATISTICS'
 
     def __init__(self, connectionString, user, password, autocommit = False):
         self.__connectionTuple = self.ipFromConnectionString(connectionString)
         if self.__connectionTuple:
-            self.__conn = connect(
-                'wss://%s:%s' % self.__connectionTuple,
+            odbcConnectionString = 'Driver=%s;CONNECTTIMEOUT=%i;QUERYTIMEOUT=%i;EXASCHEMA=%s;EXAHOST=%s;EXAUID=%s;EXAPWD=%s;' % (
+                self.__driver,
+                self.__connectTimeOut,
+                self.__queryTimeOut,
+                self.__defaultSchema,
+                connectionString,
                 user,
-                password,
-                autocommit,
-                sslopt={"cert_reqs": ssl.CERT_NONE}
+                password
             )
-            self._buffer = []
+            self.__conn = pyodbc.connect(odbcConnectionString, autocommit = autocommit)
 
 
     def execute(self, sqlText, *args):
@@ -62,11 +67,12 @@ class Database(DatabaseAbstract):
                 None:       If no result is present
                 List:       A list of all result rows
         """
+        cursor = self.__conn.cursor()
         result = []
-        with self.__conn.cursor() as c:
-            if c.execute(sqlText, *args) > 0:
-                for row in c:
-                    result.append(row)
+        exe  = cursor.execute(sqlText, *args)
+        if exe:
+            for row in exe.fetchall():
+                result.append(row)
             return result
         return None
 
