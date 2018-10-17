@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import pyodbc
-from ExasolDatabaseConnector.ExaDatabaseAbstract    import DatabaseAbstract
+from ExasolDatabaseConnector.ExaOdbcDriver.FindDriver   import GetDriverName
+from ExasolDatabaseConnector.ExaDatabaseAbstract        import DatabaseAbstract
 
 class Database(DatabaseAbstract):
     """The Database class easifies the access to your DB instance
@@ -32,7 +33,7 @@ class Database(DatabaseAbstract):
 
     __conn = None
     __connectionTuple = None
-    __driver            = '/opt/exasol/EXASOL_ODBC-6.0.4/lib/linux/x86_64/libexaodbc-uo2214lv2.so'
+    __driver            = ''
     __connectTimeOut    =  2
     __queryTimeOut      = 30
     __defaultSchema     = 'EXA_STATISTICS'
@@ -40,6 +41,7 @@ class Database(DatabaseAbstract):
     def __init__(self, connectionString, user, password, autocommit = False):
         self.__connectionTuple = self.ipFromConnectionString(connectionString)
         if self.__connectionTuple:
+            self.__driver = GetDriverName()
             odbcConnectionString = 'Driver=%s;CONNECTTIMEOUT=%i;QUERYTIMEOUT=%i;EXASCHEMA=%s;EXAHOST=%s;EXAUID=%s;EXAPWD=%s;' % (
                 self.__driver,
                 self.__connectTimeOut,
