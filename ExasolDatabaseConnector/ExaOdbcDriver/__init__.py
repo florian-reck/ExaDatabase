@@ -34,12 +34,13 @@ class Database(DatabaseAbstract):
     __conn = None
     __connectionTuple = None
     __driver            = ''
-    __connectTimeOut    =  2
+    __connectTimeOut    = 30
     __queryTimeOut      = 30
     __defaultSchema     = 'EXA_STATISTICS'
 
     def __init__(self, connectionString, user, password, autocommit = False):
         self.__connectionTuple = self.ipFromConnectionString(connectionString)
+        self._buffer = []
         if self.__connectionTuple:
             self.__driver = GetDriverName()
             odbcConnectionString = 'Driver=%s;CONNECTTIMEOUT=%i;QUERYTIMEOUT=%i;EXASCHEMA=%s;EXAHOST=%s;EXAUID=%s;EXAPWD=%s;' % (
