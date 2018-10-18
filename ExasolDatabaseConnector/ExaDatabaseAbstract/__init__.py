@@ -7,12 +7,18 @@ from contextlib import closing
 
 class DatabaseAbstract:
     _buffer = None
+    _method = None
     __ip4RangePattern = re.compile(r'^(\d+\.\d+\.\d+)\.(\d+)\.\.(\d+)')
 
 
     def __init__(self, connectionString, user, password, autocommit = False):
         self._buffer = [] #initialize buffer, don't forget in your inherited method!
+        self._method = 'ABSTRACT'
         raise NotImplementedError()
+
+
+    def getMethod(self):
+        return self._method
 
 
     def ipFromConnectionString(self, connectionString):

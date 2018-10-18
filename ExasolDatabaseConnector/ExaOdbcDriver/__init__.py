@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import pyodbc
 from ExasolDatabaseConnector.ExaOdbcDriver.FindDriver   import GetDriverName
 from ExasolDatabaseConnector.ExaDatabaseAbstract        import DatabaseAbstract
@@ -39,6 +39,7 @@ class Database(DatabaseAbstract):
     __defaultSchema     = 'EXA_STATISTICS'
 
     def __init__(self, connectionString, user, password, autocommit = False):
+        self._method = 'ODBC'
         self.__connectionTuple = self.ipFromConnectionString(connectionString)
         self._buffer = []
         if self.__connectionTuple:

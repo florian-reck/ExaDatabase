@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 from configparser   import ConfigParser
 from os             import sep
 from os.path        import expanduser, isfile, isdir

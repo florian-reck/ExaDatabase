@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 import ssl
 from ExasolDatabaseConnector.ExaDatabaseAbstract    import DatabaseAbstract
 from EXASOL                                         import connect, cursor
@@ -35,6 +35,7 @@ class Database(DatabaseAbstract):
     __connectionTuple = None
 
     def __init__(self, connectionString, user, password, autocommit = False):
+        self._method = 'WebSockets'
         self.__connectionTuple = self.ipFromConnectionString(connectionString)
         if self.__connectionTuple:
             self.__conn = connect(
