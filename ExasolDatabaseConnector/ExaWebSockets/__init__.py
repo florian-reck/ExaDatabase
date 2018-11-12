@@ -46,6 +46,8 @@ class Database(DatabaseAbstract):
                 sslopt={"cert_reqs": ssl.CERT_NONE}
             )
             self._buffer = []
+        else:
+            raise RuntimeError('database offline or wrong connection string')
 
 
     def execute(self, sqlText, *args):

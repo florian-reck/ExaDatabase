@@ -9,7 +9,7 @@ class DatabaseAbstract:
     _buffer = None
     _method = None
     __ip4RangePattern = re.compile(r'^(\d+\.\d+\.\d+)\.(\d+)\.\.(\d+)')
-
+    __ip4ConnectionStringPattern = re.compile(r'^[0-9.:]+\:\d+$')
 
     def __init__(self, connectionString, user, password, autocommit = False):
         self._buffer = [] #initialize buffer, don't forget in your inherited method!
@@ -36,18 +36,25 @@ class DatabaseAbstract:
                 Tuple (ip, port) with valid address or None if no ip is usable
 
         """
+        if not self.__ip4ConnectionStringPattern.match(connectionString):
+            raise RuntimeError('connection string doesn\'t seem to be valid, please check')
+        
         connectionSplit = connectionString.split(':')
         ipString = connectionSplit[0]
         port = int(connectionSplit[1])
-
         ipItems = []
-        for ipRange in ipString.split(','):
-            if not '..' in ipRange: #not a range, just an single IP
-                ipItems.append(ipRange)
-            else:
-                match = self.__ip4RangePattern.match(ipRange)
-                for i in range(int(match.group(2)), int(match.group(3)) + 1):
-                    ipItems.append('%s.%i' % (match.group(1), i))
+
+        try:
+            for ipRange in ipString.split(','):
+                if not '..' in ipRange: #not a range, just an single IP
+                    ipItems.append(ipRange)
+                else:
+                    match = self.__ip4RangePattern.match(ipRange)
+                    for i in range(int(match.group(2)), int(match.group(3)) + 1):
+                        ipItems.append('%s.%i' % (match.group(1), i))
+        except:
+            raise RuntimeError('could not parse connection string, please check')
+
         shuffle(ipItems)
         for ip in ipItems:
             with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:

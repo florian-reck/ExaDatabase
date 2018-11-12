@@ -54,6 +54,7 @@ class Database(DatabaseAbstract):
                 password
             )
             self.__conn = pyodbc.connect(odbcConnectionString, autocommit = autocommit)
+        raise RuntimeError('database offline or wrong connection string')
 
 
     def execute(self, sqlText, *args):
