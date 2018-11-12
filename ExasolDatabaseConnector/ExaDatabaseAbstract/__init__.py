@@ -9,7 +9,7 @@ class DatabaseAbstract:
     _buffer = None
     _method = None
     __ip4RangePattern = re.compile(r'^(\d+\.\d+\.\d+)\.(\d+)\.\.(\d+)')
-    __ip4ConnectionStringPattern = re.compile(r'^[0-9.:]+\:\d+$')
+    __ip4ConnectionStringPattern = re.compile(r'^[0-9.,:]+\:\d+$')
 
     def __init__(self, connectionString, user, password, autocommit = False):
         self._buffer = [] #initialize buffer, don't forget in your inherited method!
