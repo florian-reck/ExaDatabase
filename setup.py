@@ -6,7 +6,7 @@ except ImportError:
 
 setup(
     name='ExasolDatabaseConnector',
-    version="0.1.2",
+    version="0.1.3",
     license="MIT",
     maintainer="Florian Reck",
     maintainer_email="support@exasol.com",

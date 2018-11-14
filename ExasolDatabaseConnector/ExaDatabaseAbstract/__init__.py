@@ -58,6 +58,8 @@ class DatabaseAbstract:
         shuffle(ipItems)
         for ip in ipItems:
             with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+                s.setblocking(True)
+                s.settimeout(2)
                 if s.connect_ex((ip, port)) == 0:
                     return (ip, port)
         return None
