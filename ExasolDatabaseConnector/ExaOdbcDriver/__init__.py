@@ -76,7 +76,7 @@ class Database(DatabaseAbstract):
         cursor = self.__conn.cursor()
         result = []
         exe  = cursor.execute(sqlText, *args)
-        if exe:
+        if exe and cursor.rowcount > 0:
             fetched = exe.fetchall()
             if fetched:
                 for row in fetched:
