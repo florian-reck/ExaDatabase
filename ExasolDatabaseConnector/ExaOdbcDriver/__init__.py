@@ -77,9 +77,11 @@ class Database(DatabaseAbstract):
         result = []
         exe  = cursor.execute(sqlText, *args)
         if exe:
-            for row in exe.fetchall():
-                result.append(row)
-            return result
+            fetched = exe.fetchall()
+            if fetched:
+                for row in fetched:
+                    result.append(row)
+                return result
         return None
 
 
