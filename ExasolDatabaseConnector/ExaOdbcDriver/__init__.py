@@ -87,7 +87,7 @@ class Database(DatabaseAbstract):
                 if not "No results." in str(e):
                     raise pyodbc.ProgrammingError(e)
 
-                return result
+            return result
         return None
 
 
