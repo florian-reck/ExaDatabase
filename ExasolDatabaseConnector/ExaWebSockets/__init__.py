@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import ssl
 from ExasolDatabaseConnector.ExaDatabaseAbstract    import DatabaseAbstract
-from EXASOL                                         import connect, cursor
+from EXASOL                                         import connect, cursor, InterfaceError
 
 class Database(DatabaseAbstract):
     """The Database class easifies the access to your DB instance
@@ -68,8 +68,11 @@ class Database(DatabaseAbstract):
         result = []
         with self.__conn.cursor() as c:
             if c.execute(sqlText, *args) > 0:
-                for row in c:
-                    result.append(row)
+                try:
+                    for row in c:
+                        result.append(row)
+                except InterfaceError: # result set is closed
+                    pass
             return result
         return None
 

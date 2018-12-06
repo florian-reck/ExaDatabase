@@ -77,10 +77,16 @@ class Database(DatabaseAbstract):
         result = []
         exe  = cursor.execute(sqlText, *args)
         if exe and cursor.rowcount > 0:
-            fetched = exe.fetchall()
-            if fetched:
-                for row in fetched:
-                    result.append(row)
+            try:
+                fetched = exe.fetchall()
+                if fetched:
+                    for row in fetched:
+                        result.append(row)
+
+            except pyodbc.ProgrammingError as e:
+                if not "No results." in str(e):
+                    raise pyodbc.ProgrammingError(e)
+
                 return result
         return None
 
